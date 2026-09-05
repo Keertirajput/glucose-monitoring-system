@@ -1,91 +1,78 @@
 {
-    "version": "2.0.0",
+  "version": "2.0.0",
 
-    "tasks": [
-        {
-            "label": "Start Backend",
-            "type": "shell",
-            "command": "${workspaceFolder}/.venv/bin/python",
-            "args": [
-                "-m",
-                "uvicorn",
-                "main:app",
-                "--reload"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/backend"
-            },
-            "isBackground": true,
-            "problemMatcher": []
-        },
+  "tasks": [
 
-        {
-            "label": "Start Frontend",
-            "type": "shell",
-            "command": "npm",
-            "args": [
-                "run",
-                "dev",
-                "--",
-                "--host",
-                "127.0.0.1",
-                "--port",
-                "5173"
-            ],
-            "options": {
-                "cwd": "${workspaceFolder}/frontend"
-            },
-            "isBackground": true,
-            "problemMatcher": []
-        },
-
-        {
-             "label": "Start Sensor Simulator",
-             "type": "shell",
-             "command": "${workspaceFolder}/.venv/bin/python",
-         "args": [
-             "backend/sensor_simulator.py"
-         ],
-        "options": {
+    {
+      "label": "Start Backend",
+      "type": "shell",
+      "command": "${workspaceFolder}/.venv/bin/python",
+      "args": [
+        "-m",
+        "uvicorn",
+        "main:app",
+        "--reload"
+      ],
+      "options": {
         "cwd": "${workspaceFolder}/backend"
-       },
-          "isBackground": true,
-          "problemMatcher": []
-         }, 
-        {
-            "label": "Open Backend Browser",
-            "type": "shell",
-            "command": "open",
-            "args": [
-                "-a",
-                "Google Chrome",
-                "http://127.0.0.1:8000/docs"
-            ],
-            "problemMatcher": []
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "."
         },
-
-        {
-            "label": "Open Frontend Browser",
-            "type": "shell",
-            "command": "open",
-            "args": [
-                "-a",
-                "Google Chrome",
-                "http://127.0.0.1:5173"
-            ],
-            "problemMatcher": []
-        },
-
-        {
-            "label": "Start Project",
-            "dependsOn": [
-                "Start Backend",
-                "Start Frontend",
-                "Start Sensor Simulator",
-                "Open Backend Browser",
-                "Open Frontend Browser"
-            ],
-            "dependsOrder": "parallel"
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Uvicorn running.*",
+          "endsPattern": ".*"
         }
-    ]
+      }
+    },
+
+    {
+      "label": "Start Frontend",
+      "type": "shell",
+      "command": "npm run dev",
+      "options": {
+        "cwd": "${workspaceFolder}/frontend"
+      },
+      "isBackground": true,
+      "problemMatcher": {
+        "pattern": {
+          "regexp": "."
+        },
+        "background": {
+          "activeOnStart": true,
+          "beginsPattern": ".*Local:.*",
+          "endsPattern": ".*"
+        }
+      }
+    },
+
+    {
+      "label": "Open Frontend in Chrome",
+      "type": "shell",
+      "command": "sleep 3 && open -a \"Google Chrome\" http://localhost:5173",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Open Backend in Chrome",
+      "type": "shell",
+      "command": "sleep 3 && open -a \"Google Chrome\" http://127.0.0.1:8000/docs",
+      "problemMatcher": []
+    },
+
+    {
+      "label": "Start Project",
+      "dependsOn": [
+        "Start Backend",
+        "Start Frontend",
+        "Open Frontend in Chrome",
+        "Open Backend in Chrome"
+      ],
+      "dependsOrder": "parallel"
+    }
+
+  ]
 }
